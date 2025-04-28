@@ -214,7 +214,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:50:20" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
+              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:54:12" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
             </span>
 
           
@@ -229,7 +229,7 @@
 
       
           <hr>
-<h2 id="title：栈迁移"><a href="#title：栈迁移" class="headerlink" title="title：栈迁移"></a>title：栈迁移</h2><h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><p>有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下</p>
+<h2 id="title-栈迁移"><a href="#title-栈迁移" class="headerlink" title="title:栈迁移"></a>title:栈迁移</h2><h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><p>有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下</p>
 <p>先说下什么是栈转移？<br>首先理解下<strong>是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。<strong>为什么说这个呢？因为</strong>栈转移的核心就是控制rsp到我们目标地址处</strong>，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无关代码取数据是按具体偏移取的并不是按照栈上的顺序取），所以控制rsp是栈转移的核心。（这里<strong>主要讲两次leave，ret；指令实现栈转移</strong>，也可能有<code>jump rsp；</code>指令出现的可能，就是少见甚至难得见，可以碰碰运气找找看，万一有呢）</p>
 <h2 id="leave；ret；汇编指令解析"><a href="#leave；ret；汇编指令解析" class="headerlink" title="leave；ret；汇编指令解析"></a>leave；ret；汇编指令解析</h2><p>栈迁移中两条重要的汇编指令(借64位讲，下面用的都是64位的寄存器)</p>
 <ul>

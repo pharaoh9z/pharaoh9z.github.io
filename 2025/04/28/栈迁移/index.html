@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"pharaoh9z.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="title：栈迁移栈迁移有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下 先说下什么是栈转移？首先理解下是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。为什么说这个呢？因为栈转移的核心就是控制rsp到我们目标地址处，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无">
+  <meta name="description" content="title:栈迁移栈迁移有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下 先说下什么是栈转移？首先理解下是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。为什么说这个呢？因为栈转移的核心就是控制rsp到我们目标地址处，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Lost Pharaoh">
 <meta property="og:url" content="https://pharaoh9z.github.io/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/index.html">
 <meta property="og:site_name" content="Lost Pharaoh">
-<meta property="og:description" content="title：栈迁移栈迁移有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下 先说下什么是栈转移？首先理解下是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。为什么说这个呢？因为栈转移的核心就是控制rsp到我们目标地址处，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无">
+<meta property="og:description" content="title:栈迁移栈迁移有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下 先说下什么是栈转移？首先理解下是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。为什么说这个呢？因为栈转移的核心就是控制rsp到我们目标地址处，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pharaoh9z.github.io/images/%E6%A0%88%E8%BF%81%E7%A7%BB/3a4e21b1be534640e6ee8e6bfa708246.png">
 <meta property="article:published_time" content="2025-04-28T09:40:27.443Z">
-<meta property="article:modified_time" content="2025-04-28T09:50:20.983Z">
+<meta property="article:modified_time" content="2025-04-28T09:54:12.293Z">
 <meta property="article:author" content="phara9z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://pharaoh9z.github.io/images/%E6%A0%88%E8%BF%81%E7%A7%BB/3a4e21b1be534640e6ee8e6bfa708246.png">
@@ -220,7 +220,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:50:20" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
+              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:54:12" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
             </span>
 
           
@@ -235,7 +235,7 @@
 
       
         <hr>
-<h2 id="title：栈迁移"><a href="#title：栈迁移" class="headerlink" title="title：栈迁移"></a>title：栈迁移</h2><h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><p>有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下</p>
+<h2 id="title-栈迁移"><a href="#title-栈迁移" class="headerlink" title="title:栈迁移"></a>title:栈迁移</h2><h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><p>有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下</p>
 <p>先说下什么是栈转移？<br>首先理解下<strong>是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。<strong>为什么说这个呢？因为</strong>栈转移的核心就是控制rsp到我们目标地址处</strong>，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无关代码取数据是按具体偏移取的并不是按照栈上的顺序取），所以控制rsp是栈转移的核心。（这里<strong>主要讲两次leave，ret；指令实现栈转移</strong>，也可能有<code>jump rsp；</code>指令出现的可能，就是少见甚至难得见，可以碰碰运气找找看，万一有呢）</p>
 <h2 id="leave；ret；汇编指令解析"><a href="#leave；ret；汇编指令解析" class="headerlink" title="leave；ret；汇编指令解析"></a>leave；ret；汇编指令解析</h2><p>栈迁移中两条重要的汇编指令(借64位讲，下面用的都是64位的寄存器)</p>
 <ul>
@@ -343,7 +343,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title%EF%BC%9A%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number">1.</span> <span class="nav-text">title：栈迁移</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number"></span> <span class="nav-text">栈迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#leave%EF%BC%9Bret%EF%BC%9B%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E8%A7%A3%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">leave；ret；汇编指令解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number"></span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">原理图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text"></span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title-%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number">1.</span> <span class="nav-text">title:栈迁移</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number"></span> <span class="nav-text">栈迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#leave%EF%BC%9Bret%EF%BC%9B%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E8%A7%A3%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">leave；ret；汇编指令解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number"></span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">原理图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text"></span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
