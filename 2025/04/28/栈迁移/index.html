@@ -27,10 +27,12 @@
 <meta property="og:site_name" content="Lost Pharaoh">
 <meta property="og:description" content="title：栈迁移栈迁移有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下 先说下什么是栈转移？首先理解下是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。为什么说这个呢？因为栈转移的核心就是控制rsp到我们目标地址处，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pharaoh9z.github.io/images/%E6%A0%88%E8%BF%81%E7%A7%BB/3a4e21b1be534640e6ee8e6bfa708246.png">
 <meta property="article:published_time" content="2025-04-28T09:40:27.443Z">
-<meta property="article:modified_time" content="2025-04-28T09:41:02.247Z">
+<meta property="article:modified_time" content="2025-04-28T09:50:20.983Z">
 <meta property="article:author" content="phara9z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pharaoh9z.github.io/images/%E6%A0%88%E8%BF%81%E7%A7%BB/3a4e21b1be534640e6ee8e6bfa708246.png">
 
 <link rel="canonical" href="https://pharaoh9z.github.io/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/">
 
@@ -218,7 +220,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:41:02" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
+              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:50:20" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
             </span>
 
           
@@ -246,8 +248,7 @@
 <li>利用leave指令</li>
 </ol>
 <p>leave指令等价于两条指令，第一条可以用来设置rsp，第二条能够用来设置rbp。由此就可以想到用两次leave；ret；指令，第一次用于设置rbp为想要转移的目标地址-8处，第二次用于将rsp转移至目标地址处，然后接的ret指令就能够让程序执行这个新栈上的内容。</p>
-<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p>![3a4e21b1be534640e6ee8e6bfa708246](C:\Users\hp\Documents\Tencent Files\3884945129\nt_qq\nt_data\Pic\2025-04\Ori\3a4e21b1be534640e6ee8e6bfa708246.png)</p>
-<p>所以-8的原因是为了抵消leave指令中的<code>pop rbp</code>,使得栈能够准确的转移到目标地址上。</p>
+<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><h2 id=""><a href="#" class="headerlink" title=""></a><img src="/../images/%E6%A0%88%E8%BF%81%E7%A7%BB/3a4e21b1be534640e6ee8e6bfa708246.png" alt="3a4e21b1be534640e6ee8e6bfa708246"></h2><p>所以-8的原因是为了抵消leave指令中的<code>pop rbp</code>,使得栈能够准确的转移到目标地址上。</p>
 
     </div>
 
@@ -342,7 +343,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title%EF%BC%9A%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number">1.</span> <span class="nav-text">title：栈迁移</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number"></span> <span class="nav-text">栈迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#leave%EF%BC%9Bret%EF%BC%9B%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E8%A7%A3%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">leave；ret；汇编指令解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number"></span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">原理图</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title%EF%BC%9A%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number">1.</span> <span class="nav-text">title：栈迁移</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="nav-number"></span> <span class="nav-text">栈迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#leave%EF%BC%9Bret%EF%BC%9B%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4%E8%A7%A3%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">leave；ret；汇编指令解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number"></span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">原理图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text"></span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

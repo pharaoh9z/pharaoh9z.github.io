@@ -150,8 +150,7 @@
 <li>利用leave指令</li>
 </ol>
 <p>leave指令等价于两条指令，第一条可以用来设置rsp，第二条能够用来设置rbp。由此就可以想到用两次leave；ret；指令，第一次用于设置rbp为想要转移的目标地址-8处，第二次用于将rsp转移至目标地址处，然后接的ret指令就能够让程序执行这个新栈上的内容。</p>
-<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p>![3a4e21b1be534640e6ee8e6bfa708246](C:\Users\hp\Documents\Tencent Files\3884945129\nt_qq\nt_data\Pic\2025-04\Ori\3a4e21b1be534640e6ee8e6bfa708246.png)</p>
-<p>所以-8的原因是为了抵消leave指令中的<code>pop rbp</code>,使得栈能够准确的转移到目标地址上。</p>
+<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><h2 id=""><a href="#" class="headerlink" title=""></a><img src="/../images/%E6%A0%88%E8%BF%81%E7%A7%BB/3a4e21b1be534640e6ee8e6bfa708246.png" alt="3a4e21b1be534640e6ee8e6bfa708246"></h2><p>所以-8的原因是为了抵消leave指令中的<code>pop rbp</code>,使得栈能够准确的转移到目标地址上。</p>
 ]]></content>
   </entry>
 </search>
