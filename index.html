@@ -189,6 +189,80 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://pharaoh9z.github.io/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="phara9z">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lost Pharaoh">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:41:02" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <hr>
+<h2 id="title：栈迁移"><a href="#title：栈迁移" class="headerlink" title="title：栈迁移"></a>title：栈迁移</h2><h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><p>有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下</p>
+<p>先说下什么是栈转移？<br>首先理解下<strong>是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。<strong>为什么说这个呢？因为</strong>栈转移的核心就是控制rsp到我们目标地址处</strong>，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无关代码取数据是按具体偏移取的并不是按照栈上的顺序取），所以控制rsp是栈转移的核心。（这里<strong>主要讲两次leave，ret；指令实现栈转移</strong>，也可能有<code>jump rsp；</code>指令出现的可能，就是少见甚至难得见，可以碰碰运气找找看，万一有呢）</p>
+<h2 id="leave；ret；汇编指令解析"><a href="#leave；ret；汇编指令解析" class="headerlink" title="leave；ret；汇编指令解析"></a>leave；ret；汇编指令解析</h2><p>栈迁移中两条重要的汇编指令(借64位讲，下面用的都是64位的寄存器)</p>
+<ul>
+<li><strong><code>leave</code>：相当于两条汇编指令<code>mov rsp,rbp;pop rbp</code></strong></li>
+<li><strong><code>ret</code>:相当于汇编指令<code>pop rip;</code></strong></li>
+</ul>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>从leave指令处的解析，<code>mov rsp,rbp;</code>可以想到利用leave指令来控制rsp，接下来就是如何控制rbp为我们想要的地址。</p>
+<ol>
+<li>直接找<code>pop rbp;</code>的gadget（不常见）</li>
+<li>利用leave指令</li>
+</ol>
+<p>leave指令等价于两条指令，第一条可以用来设置rsp，第二条能够用来设置rbp。由此就可以想到用两次leave；ret；指令，第一次用于设置rbp为想要转移的目标地址-8处，第二次用于将rsp转移至目标地址处，然后接的ret指令就能够让程序执行这个新栈上的内容。</p>
+<h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><p>![3a4e21b1be534640e6ee8e6bfa708246](C:\Users\hp\Documents\Tencent Files\3884945129\nt_qq\nt_data\Pic\2025-04\Ori\3a4e21b1be534640e6ee8e6bfa708246.png)</p>
+<p>所以-8的原因是为了抵消leave指令中的<code>pop rbp</code>,使得栈能够准确的转移到目标地址上。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://pharaoh9z.github.io/2025/04/27/%E9%9A%8F%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -490,7 +564,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
