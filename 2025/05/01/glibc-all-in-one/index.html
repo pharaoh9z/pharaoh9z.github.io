@@ -20,19 +20,22 @@
     var CONFIG = {"hostname":"pharaoh9z.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="相对路径与绝对路径绝对路径提供了从文件系统的根目录到目标文件或目录的完整路径。 相对路径则是从当前工作目录到目标文件或目录的路径。 绝对路径是从根目录（&#x2F;）开始的完整路径，而相对路径则是相对于当前工作目录的路径。例如，&#x2F;home&#x2F;user&#x2F;flag是绝对路径，而.&#x2F;flag是相对当前目录的。 单独的 flag 是相对路径的简写形式，等同于 .&#x2F;fl">
+  <meta name="description" content="title：glibc-all-in-one  先进入glibc-all-in-one的目录  运行脚本生成最新的 list 文件（包含下载 URL）：  1.&#x2F;update_list   查找目标glibc版本  1cat list | grep &quot;2.31-0ubuntu9.17&quot;   下载 libc 和 ld  1.&#x2F;download libc6_2.31-0ubunt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="随笔记录">
-<meta property="og:url" content="https://pharaoh9z.github.io/2025/04/27/%E9%9A%8F%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="Lost Pharaoh">
+<meta property="og:url" content="https://pharaoh9z.github.io/2025/05/01/glibc-all-in-one/index.html">
 <meta property="og:site_name" content="Lost Pharaoh">
-<meta property="og:description" content="相对路径与绝对路径绝对路径提供了从文件系统的根目录到目标文件或目录的完整路径。 相对路径则是从当前工作目录到目标文件或目录的路径。 绝对路径是从根目录（&#x2F;）开始的完整路径，而相对路径则是相对于当前工作目录的路径。例如，&#x2F;home&#x2F;user&#x2F;flag是绝对路径，而.&#x2F;flag是相对当前目录的。 单独的 flag 是相对路径的简写形式，等同于 .&#x2F;fl">
+<meta property="og:description" content="title：glibc-all-in-one  先进入glibc-all-in-one的目录  运行脚本生成最新的 list 文件（包含下载 URL）：  1.&#x2F;update_list   查找目标glibc版本  1cat list | grep &quot;2.31-0ubuntu9.17&quot;   下载 libc 和 ld  1.&#x2F;download libc6_2.31-0ubunt">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-04-27T15:47:20.717Z">
-<meta property="article:modified_time" content="2025-04-27T15:53:07.174Z">
+<meta property="og:image" content="d:\learning\blog\source\images\glibc-all-in-one\29c1d080b21d305e33f36537f335f068.png">
+<meta property="og:image" content="d:\learning\blog\source\images\glibc-all-in-one\4d83f100dd095240a5ac599c2ffdc352.png">
+<meta property="article:published_time" content="2025-05-01T14:49:21.541Z">
+<meta property="article:modified_time" content="2025-05-01T14:50:07.754Z">
 <meta property="article:author" content="phara9z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="d:\learning\blog\source\images\glibc-all-in-one\29c1d080b21d305e33f36537f335f068.png">
 
-<link rel="canonical" href="https://pharaoh9z.github.io/2025/04/27/%E9%9A%8F%E7%AC%94%E8%AE%B0/">
+<link rel="canonical" href="https://pharaoh9z.github.io/2025/05/01/glibc-all-in-one/">
 
 
 <script id="page-configurations">
@@ -45,7 +48,7 @@
   };
 </script>
 
-  <title>随笔记录 | Lost Pharaoh</title>
+  <title> | Lost Pharaoh</title>
   
 
 
@@ -194,7 +197,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://pharaoh9z.github.io/2025/04/27/%E9%9A%8F%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="https://pharaoh9z.github.io/2025/05/01/glibc-all-in-one/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -207,7 +210,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          随笔记录
+          
         </h1>
 
         <div class="post-meta">
@@ -218,7 +221,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-04-27 23:47:20 / 修改时间：23:53:07" itemprop="dateCreated datePublished" datetime="2025-04-27T23:47:20+08:00">2025-04-27</time>
+              <time title="创建时间：2025-05-01 22:49:21 / 修改时间：22:50:07" itemprop="dateCreated datePublished" datetime="2025-05-01T22:49:21+08:00">2025-05-01</time>
             </span>
 
           
@@ -232,22 +235,52 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="相对路径与绝对路径"><a href="#相对路径与绝对路径" class="headerlink" title="相对路径与绝对路径"></a>相对路径与绝对路径</h1><p><strong>绝对路径</strong>提供了从文件系统的<strong>根目录</strong>到目标文件或目录的完整路径。</p>
-<p><strong>相对路径</strong>则是从当前工作目录到目标文件或目录的路径。</p>
-<p>绝对路径是从<strong>根目录（&#x2F;）开始的完整路径</strong>，而相对路径则是相对于当前工作目录的路径。例如，&#x2F;home&#x2F;user&#x2F;flag是绝对路径，而.&#x2F;flag是相对当前目录的。</p>
-<p>单独的 <code>flag</code> 是<strong>相对路径的简写形式</strong>，等同于 <code>./flag</code>，其路径基于当前目录。若当前目录为 <code>/home/user</code>，则 <code>flag</code> 实际指向 <code>/home/user/flag</code></p>
-<h1 id="lea汇编指令"><a href="#lea汇编指令" class="headerlink" title="lea汇编指令"></a>lea汇编指令</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lea rax, [rbp+addr]</span><br></pre></td></tr></table></figure>
-
-<p>简单介绍下lea指令的作用<br>rbp–&gt;rbp寄存器中存储的地址<br>adder–&gt;缓冲区的符号名称，在汇编器中，符号会被指的是符号会被转换成一个的具体的偏移量（符号buf的偏移，可能为正可能为负，具体看栈结构）<br>指令作用：将rbp加buf量后的地址计算出来，并把地址赋值给rax<br>eg：rbp&#x3D;0x1000  buf偏移为0x20 -&gt; rax&#x3D;0x1020</p>
+        <hr>
+<h2 id="title：glibc-all-in-one"><a href="#title：glibc-all-in-one" class="headerlink" title="title：glibc-all-in-one"></a>title：glibc-all-in-one</h2><p>  先进入glibc-all-in-one的目录</p>
 <ul>
-<li><code>lea</code>:<strong>不访问内存，只完成地址运算。</strong></li>
-<li><code>mov</code>：<strong>进行赋值</strong></li>
+<li>运行脚本生成最新的 <code>list</code> 文件（包含下载 URL）：</li>
 </ul>
-<p>在汇编语言中，通常<code>[]</code>用于间接寻址，即访问该内存处的值。即：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov rax,[rbp+buf]  //将rbp+buf偏移量得到的地址处的值取出赋给rax</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./update_list</span><br></pre></td></tr></table></figure>
 
-<p>但是对于<code>lea</code>指令是个例外</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lea rax,[rbp+buf] //在这条汇编指令中[]就仅仅起个数学运算式里面（）的作用，不会取这个地址里面的内容。</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查找目标glibc版本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> list | grep <span class="string">&quot;2.31-0ubuntu9.17&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="下载-libc-和-ld"><a href="#下载-libc-和-ld" class="headerlink" title="下载 libc 和 ld"></a><strong>下载 libc 和 ld</strong></h4></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./download libc6_2.31-0ubuntu9.17_amd64</span><br></pre></td></tr></table></figure>
+
+<p>成功下载后，文件会保存在 <code>libs/libc6_2.31-0ubuntu9.17_amd64</code> 目录中。</p>
+<p>打开对应文件夹把需要的ld文件和libc文件（在 <code>glibc</code> 的每个版本中，都会提供一系列功能库（<code>.so</code>）和辅助库，它们共同为用户态程序提供标准 C 接口、数学运算、线程支持、动态加载、网络解析、本地化以及调试&#x2F;性能分析等功能）复制过去，再用patchelf修改。</p>
+<hr>
+<p>glibc-all-in-one项目使用问题</p>
+<p>我重新下载后使用命令，出现这个问题，多了<code>libc6_</code></p>
+<p><img src="D:\learning\blog\source\images\glibc-all-in-one\29c1d080b21d305e33f36537f335f068.png" alt="29c1d080b21d305e33f36537f335f068"></p>
+<p>什么原因我也不知道，我就直接git下来的没有改过download里面的东西。</p>
+<ol>
+<li>用你熟悉的文本编辑器打开 <code>download</code>：</li>
+</ol>
+<ul>
+<li><p>如果你喜欢 <strong>nano</strong>（新手友好）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano download</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果你习惯 <strong>vim</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim download</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>或者用 <strong>gedit</strong>（图形界面）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gedit download</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>修改文件内容</li>
+</ol>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> download_single() &#123;</span><br><span class="line">   local id=$1</span><br><span class="line"><span class="deletion">-  local deb_name=$LIBC_PREFIX$id.deb</span></span><br><span class="line"><span class="addition">+  local deb_name=libc6_$&#123;id&#125;.deb</span></span><br><span class="line">   local dbg_name=$LIBC_DBG_PREFIX$id.deb</span><br><span class="line">   echo &quot;Getting $id&quot;</span><br><span class="line">   if [ -d &quot;libs/$id&quot; ]; then</span><br><span class="line">     die &quot;  --&gt; Downloaded before. Remove it to download again.&quot;</span><br><span class="line">   fi</span><br><span class="line"></span><br><span class="line">   # download binary package</span><br><span class="line"><span class="deletion">-  local url=&quot;$SOURCE/$deb_name&quot;</span></span><br><span class="line"><span class="addition">+  local url=&quot;$SOURCE/libc6_$&#123;id&#125;.deb&quot;</span></span><br><span class="line">   echo &quot;  -&gt; Location: $url&quot;</span><br><span class="line">   echo &quot;  -&gt; Downloading libc binary package&quot;</span><br><span class="line">   wget &quot;$url&quot; 2&gt;/dev/null -O debs/$deb_name || die &quot;Failed to download package from $url&quot;</span><br><span class="line">   echo &quot;  -&gt; Extracting libc binary package&quot;</span><br></pre></td></tr></table></figure>
+
+<p>找到对应行修改为绿色行就行。</p>
+<p>放张成功下载的图</p>
+<p><img src="D:\learning\blog\source\images\glibc-all-in-one\4d83f100dd095240a5ac599c2ffdc352.png" alt="4d83f100dd095240a5ac599c2ffdc352"></p>
+
     </div>
 
     
@@ -262,7 +295,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://pharaoh9z.github.io/2025/04/27/%E9%9A%8F%E7%AC%94%E8%AE%B0/" title="随笔记录">https://pharaoh9z.github.io/2025/04/27/随笔记/</a>
+    <a href="https://pharaoh9z.github.io/2025/05/01/glibc-all-in-one/" title="">https://pharaoh9z.github.io/2025/05/01/glibc-all-in-one/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -279,13 +312,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/04/24/ret2libc/" rel="prev" title="ret2libc">
-      <i class="fa fa-chevron-left"></i> ret2libc
+    <a href="/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/" rel="next" title="">
-       <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -344,7 +374,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84%E4%B8%8E%E7%BB%9D%E5%AF%B9%E8%B7%AF%E5%BE%84"><span class="nav-number">1.</span> <span class="nav-text">相对路径与绝对路径</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lea%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">lea汇编指令</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title%EF%BC%9Aglibc-all-in-one"><span class="nav-number">1.</span> <span class="nav-text">title：glibc-all-in-one</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-libc-%E5%92%8C-ld"><span class="nav-number">1.0.1.</span> <span class="nav-text">下载 libc 和 ld</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

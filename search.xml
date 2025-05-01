@@ -153,4 +153,54 @@
 <h2 id="原理图"><a href="#原理图" class="headerlink" title="原理图"></a>原理图</h2><h2 id=""><a href="#" class="headerlink" title=""></a><img src="/../images/%E6%A0%88%E8%BF%81%E7%A7%BB/3a4e21b1be534640e6ee8e6bfa708246.png" alt="3a4e21b1be534640e6ee8e6bfa708246"></h2><p>所以-8的原因是为了抵消leave指令中的<code>pop rbp</code>,使得栈能够准确的转移到目标地址上。</p>
 ]]></content>
   </entry>
+  <entry>
+    <title></title>
+    <url>/2025/05/01/glibc-all-in-one/</url>
+    <content><![CDATA[<hr>
+<h2 id="title：glibc-all-in-one"><a href="#title：glibc-all-in-one" class="headerlink" title="title：glibc-all-in-one"></a>title：glibc-all-in-one</h2><p>  先进入glibc-all-in-one的目录</p>
+<ul>
+<li>运行脚本生成最新的 <code>list</code> 文件（包含下载 URL）：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./update_list</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查找目标glibc版本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> list | grep <span class="string">&quot;2.31-0ubuntu9.17&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="下载-libc-和-ld"><a href="#下载-libc-和-ld" class="headerlink" title="下载 libc 和 ld"></a><strong>下载 libc 和 ld</strong></h4></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./download libc6_2.31-0ubuntu9.17_amd64</span><br></pre></td></tr></table></figure>
+
+<p>成功下载后，文件会保存在 <code>libs/libc6_2.31-0ubuntu9.17_amd64</code> 目录中。</p>
+<p>打开对应文件夹把需要的ld文件和libc文件（在 <code>glibc</code> 的每个版本中，都会提供一系列功能库（<code>.so</code>）和辅助库，它们共同为用户态程序提供标准 C 接口、数学运算、线程支持、动态加载、网络解析、本地化以及调试&#x2F;性能分析等功能）复制过去，再用patchelf修改。</p>
+<hr>
+<p>glibc-all-in-one项目使用问题</p>
+<p>我重新下载后使用命令，出现这个问题，多了<code>libc6_</code></p>
+<p><img src="D:\learning\blog\source\images\glibc-all-in-one\29c1d080b21d305e33f36537f335f068.png" alt="29c1d080b21d305e33f36537f335f068"></p>
+<p>什么原因我也不知道，我就直接git下来的没有改过download里面的东西。</p>
+<ol>
+<li>用你熟悉的文本编辑器打开 <code>download</code>：</li>
+</ol>
+<ul>
+<li><p>如果你喜欢 <strong>nano</strong>（新手友好）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nano download</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果你习惯 <strong>vim</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vim download</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>或者用 <strong>gedit</strong>（图形界面）：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gedit download</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>修改文件内容</li>
+</ol>
+<figure class="highlight diff"><table><tr><td class="code"><pre><span class="line"> download_single() &#123;</span><br><span class="line">   local id=$1</span><br><span class="line"><span class="deletion">-  local deb_name=$LIBC_PREFIX$id.deb</span></span><br><span class="line"><span class="addition">+  local deb_name=libc6_$&#123;id&#125;.deb</span></span><br><span class="line">   local dbg_name=$LIBC_DBG_PREFIX$id.deb</span><br><span class="line">   echo &quot;Getting $id&quot;</span><br><span class="line">   if [ -d &quot;libs/$id&quot; ]; then</span><br><span class="line">     die &quot;  --&gt; Downloaded before. Remove it to download again.&quot;</span><br><span class="line">   fi</span><br><span class="line"></span><br><span class="line">   # download binary package</span><br><span class="line"><span class="deletion">-  local url=&quot;$SOURCE/$deb_name&quot;</span></span><br><span class="line"><span class="addition">+  local url=&quot;$SOURCE/libc6_$&#123;id&#125;.deb&quot;</span></span><br><span class="line">   echo &quot;  -&gt; Location: $url&quot;</span><br><span class="line">   echo &quot;  -&gt; Downloading libc binary package&quot;</span><br><span class="line">   wget &quot;$url&quot; 2&gt;/dev/null -O debs/$deb_name || die &quot;Failed to download package from $url&quot;</span><br><span class="line">   echo &quot;  -&gt; Extracting libc binary package&quot;</span><br></pre></td></tr></table></figure>
+
+<p>找到对应行修改为绿色行就行。</p>
+<p>放张成功下载的图</p>
+<p><img src="D:\learning\blog\source\images\glibc-all-in-one\4d83f100dd095240a5ac599c2ffdc352.png" alt="4d83f100dd095240a5ac599c2ffdc352"></p>
+]]></content>
+  </entry>
 </search>
