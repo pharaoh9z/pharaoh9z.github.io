@@ -154,10 +154,9 @@
 ]]></content>
   </entry>
   <entry>
-    <title></title>
+    <title>glibc-all-in-one</title>
     <url>/2025/05/01/glibc-all-in-one/</url>
-    <content><![CDATA[<hr>
-<h2 id="title：glibc-all-in-one"><a href="#title：glibc-all-in-one" class="headerlink" title="title：glibc-all-in-one"></a>title：glibc-all-in-one</h2><p>  先进入glibc-all-in-one的目录</p>
+    <content><![CDATA[<p>  先进入glibc-all-in-one的目录</p>
 <ul>
 <li>运行脚本生成最新的 <code>list</code> 文件（包含下载 URL）：</li>
 </ul>
@@ -177,8 +176,8 @@
 <p>打开对应文件夹把需要的ld文件和libc文件（在 <code>glibc</code> 的每个版本中，都会提供一系列功能库（<code>.so</code>）和辅助库，它们共同为用户态程序提供标准 C 接口、数学运算、线程支持、动态加载、网络解析、本地化以及调试&#x2F;性能分析等功能）复制过去，再用patchelf修改。</p>
 <hr>
 <p>glibc-all-in-one项目使用问题</p>
-<p>我重新下载后使用命令，出现这个问题，多了<code>libc6_</code></p>
-<p><img src="D:\learning\blog\source\images\glibc-all-in-one\29c1d080b21d305e33f36537f335f068.png" alt="29c1d080b21d305e33f36537f335f068"></p>
+<p>我重新下载后使用命令，还是出现这个问题，多了<code>libc6_</code></p>
+<p><img src="/../images/glibc-all-in-one/29c1d080b21d305e33f36537f335f068.png" alt="29c1d080b21d305e33f36537f335f068"></p>
 <p>什么原因我也不知道，我就直接git下来的没有改过download里面的东西。</p>
 <ol>
 <li>用你熟悉的文本编辑器打开 <code>download</code>：</li>
@@ -200,7 +199,7 @@
 
 <p>找到对应行修改为绿色行就行。</p>
 <p>放张成功下载的图</p>
-<p><img src="D:\learning\blog\source\images\glibc-all-in-one\4d83f100dd095240a5ac599c2ffdc352.png" alt="4d83f100dd095240a5ac599c2ffdc352"></p>
+<p><img src="/../images/glibc-all-in-one/4d83f100dd095240a5ac599c2ffdc352.png" alt="4d83f100dd095240a5ac599c2ffdc352"></p>
 ]]></content>
   </entry>
 </search>
