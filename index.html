@@ -189,6 +189,71 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://pharaoh9z.github.io/2025/05/11/%E8%AE%A9%E4%BA%BA%E7%94%9F%E5%8E%8C%E7%9A%84printf%E6%95%B0%E6%8D%AE%E6%8E%A5%E6%94%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="phara9z">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lost Pharaoh">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/05/11/%E8%AE%A9%E4%BA%BA%E7%94%9F%E5%8E%8C%E7%9A%84printf%E6%95%B0%E6%8D%AE%E6%8E%A5%E6%94%B6/" class="post-title-link" itemprop="url">让人生厌的printf数据接收</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-05-11 19:22:43" itemprop="dateCreated datePublished" datetime="2025-05-11T19:22:43+08:00">2025-05-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="1-x"><a href="#1-x" class="headerlink" title="1.%x"></a>1.%x</h2><p><code>printf(&quot;%x\n&quot;, buf_);</code></p>
+<p>接收脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">p.recvuntil(<span class="string">b&#x27;&#x27;</span>) <span class="comment">#接垃圾数据</span></span><br><span class="line">data=p.recvuntil(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">canary=<span class="built_in">int</span>(data,<span class="number">16</span>)</span><br><span class="line">log.info(<span class="string">&quot;canary:&quot;</span>+<span class="built_in">hex</span>(canary))</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-s"><a href="#2-s" class="headerlink" title="2.%s"></a>2.%s</h2><p><code>printf(&quot;%s. thank you&quot;, buf);</code></p>
+<p>接受脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">p.sendlineafter(<span class="string">&quot;init&quot;</span>,payload)<span class="comment">#用的sendline后面带换行符\n,所以后面用掩码处理了下</span></span><br><span class="line">p.recvuntil(<span class="string">b&#x27;b&#x27;</span>)<span class="comment">#垃圾数据</span></span><br><span class="line">data = u64(p.recv(<span class="number">8</span>))</span><br><span class="line">mask = <span class="number">0xFFFFFFFFFFFFFF00</span></span><br><span class="line">canary = data &amp; mask</span><br><span class="line">log.info(<span class="string">&quot;canary: &quot;</span> + <span class="built_in">hex</span>(canary))</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://pharaoh9z.github.io/2025/05/01/glibc-all-in-one/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -305,7 +370,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/2025/04/28/%E6%A0%88%E8%BF%81%E7%A7%BB/" class="post-title-link" itemprop="url">栈迁移</a>
         </h2>
 
         <div class="post-meta">
@@ -314,10 +379,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2025-04-28 17:40:27 / 修改时间：17:54:12" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
+              <time title="创建时间：2025-04-28 17:40:27" itemprop="dateCreated datePublished" datetime="2025-04-28T17:40:27+08:00">2025-04-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-05-11 19:21:35" itemprop="dateModified" datetime="2025-05-11T19:21:35+08:00">2025-05-11</time>
+              </span>
 
           
 
@@ -330,8 +401,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <hr>
-<h2 id="title-栈迁移"><a href="#title-栈迁移" class="headerlink" title="title:栈迁移"></a>title:栈迁移</h2><h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><p>有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下</p>
+          <h1 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h1><p>有点点容易忘为什么要将rbp的值覆盖为rbp-8（虽然感觉就硬记也没什么影响），不是很麻烦干脆写篇博客记下</p>
 <p>先说下什么是栈转移？<br>首先理解下<strong>是rsp在哪里（栈顶指针，指向栈的顶部），栈顶就在哪里。<strong>为什么说这个呢？因为</strong>栈转移的核心就是控制rsp到我们目标地址处</strong>，由于值是由栈顶往下布置，程序执行时也是从栈顶开始拿取数据的（比如指令pop rip这种指令，当然有例外对于一些地址无关代码取数据是按具体偏移取的并不是按照栈上的顺序取），所以控制rsp是栈转移的核心。（这里<strong>主要讲两次leave，ret；指令实现栈转移</strong>，也可能有<code>jump rsp；</code>指令出现的可能，就是少见甚至难得见，可以碰碰运气找找看，万一有呢）</p>
 <h2 id="leave；ret；汇编指令解析"><a href="#leave；ret；汇编指令解析" class="headerlink" title="leave；ret；汇编指令解析"></a>leave；ret；汇编指令解析</h2><p>栈迁移中两条重要的汇编指令(借64位讲，下面用的都是64位的寄存器)</p>
 <ul>
@@ -665,7 +735,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
